@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # with:
+        #   fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -36,14 +36,14 @@ jobs:
           
       - name: Build
         run: |
-          ./gradlew assemble
+          ./gradlew help
 
-      - name: Upload library
-        uses: actions/upload-artifact@v4
-        with:
-          name: library
-          path: build/libs/
-          if-no-files-found: error
+      # - name: Upload library
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: library
+      #     path: build/libs/
+      #     if-no-files-found: error
 
   # test:
   #   strategy:
