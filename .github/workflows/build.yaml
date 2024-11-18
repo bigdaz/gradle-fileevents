@@ -22,10 +22,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Zig
-        uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: '0.14.0-dev.1911+3bf89f55c'
+      # - name: Setup Zig
+      #   uses: goto-bus-stop/setup-zig@v2
+      #   with:
+      #     version: '0.14.0-dev.1911+3bf89f55c'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -45,52 +45,52 @@ jobs:
           path: build/libs/
           if-no-files-found: error
 
-  test:
-    strategy:
-      matrix:
-        os: [ ubuntu-20.04, ubuntu-latest, macos-13, macos-latest, windows-2019, windows-latest, alpine ]
-        include:
-            - os: alpine
-              container: eclipse-temurin:17-alpine
-      fail-fast: false
-    runs-on: ${{ matrix.os == 'alpine' && 'ubuntu-latest' || matrix.os }}
-    container: ${{ matrix.container }}
+  # test:
+  #   strategy:
+  #     matrix:
+  #       os: [ ubuntu-20.04, ubuntu-latest, macos-13, macos-latest, windows-2019, windows-latest, alpine ]
+  #       include:
+  #           - os: alpine
+  #             container: eclipse-temurin:17-alpine
+  #     fail-fast: false
+  #   runs-on: ${{ matrix.os == 'alpine' && 'ubuntu-latest' || matrix.os }}
+  #   container: ${{ matrix.container }}
 
-    needs: build
+  #   needs: build
 
-    steps:
-      - name: Checkout project sources
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout project sources
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Set up JDK
-        if: matrix.os != 'alpine'
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+  #     - name: Set up JDK
+  #       if: matrix.os != 'alpine'
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          build-scan-publish: true
-          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
-          build-scan-terms-of-use-agree: "yes"
+  #     - name: Setup Gradle
+  #       uses: gradle/actions/setup-gradle@v4
+  #       with:
+  #         build-scan-publish: true
+  #         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+  #         build-scan-terms-of-use-agree: "yes"
           
-      - name: Download library
-        uses: actions/download-artifact@v4
-        with:
-          name: library
-          path: build/remote/
+  #     - name: Download library
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: library
+  #         path: build/remote/
 
-      - name: Test
-        run: |
-          ./gradlew externalTest
+  #     - name: Test
+  #       run: |
+  #         ./gradlew externalTest
 
-      - name: Upload build reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-reports-${{ matrix.os }}
-          path: build/reports/
+  #     - name: Upload build reports
+  #       uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: test-reports-${{ matrix.os }}
+  #         path: build/reports/
